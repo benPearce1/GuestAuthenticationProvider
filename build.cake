@@ -20,8 +20,9 @@ var publishDir = "./publish";
 var artifactsDir = "./artifacts";
 var assetDir = "./BuildAssets";
 var globalAssemblyFile = "./source/Solution Items/VersionInfo.cs";
-var solutionToBuild = "./source/Octopus.Server.Extensibility.sln";
-var fileToPublish = "./source/Octopus.Server.Extensibility/bin/Release/Octopus.Server.Extensibility.dll";
+var extensionName = "Octopus.Server.Extensibility.Authentication.Guest";
+var solutionToBuild = "./source/" + extensionName + ".sln";
+var fileToPublish = "./source/" + extensionName + "/bin/Release/" + extensionName + ".dll";
 
 var isContinuousIntegrationBuild = !BuildSystem.IsLocalBuild;
 
@@ -36,7 +37,7 @@ var nugetVersion = isContinuousIntegrationBuild ? gitVersionInfo.NuGetVersion : 
 ///////////////////////////////////////////////////////////////////////////////
 Setup(context =>
 {
-    Information("Building Octopus.Server.Extensibility v{0}", nugetVersion);
+    Information("Building " + extensionName + " v{0}", nugetVersion);
 });
 
 Teardown(context =>
@@ -93,7 +94,7 @@ Task("__Build")
 Task("__Pack")
     .Does(() => {
         var nugetPackDir = Path.Combine(publishDir, "nuget");
-        var nuspecFile = "Octopus.Server.Extensibility.nuspec";
+        var nuspecFile = extensionName + ".nuspec";
         
 		CreateDirectory(nugetPackDir);
         CopyFileToDirectory(Path.Combine(assetDir, nuspecFile), nugetPackDir);
@@ -116,14 +117,14 @@ Task("__Publish")
 
     if (shouldPushToMyGet)
     {
-        NuGetPush("artifacts/Octopus.Server.Extensibility." + nugetVersion + ".nupkg", new NuGetPushSettings {
+        NuGetPush("artifacts/" + extensionName + "." + nugetVersion + ".nupkg", new NuGetPushSettings {
             Source = "https://octopus.myget.org/F/octopus-dependencies/api/v3/index.json",
             ApiKey = EnvironmentVariable("MyGetApiKey")
         });
     }
     if (shouldPushToNuGet)
     {
-        NuGetPush("artifacts/Octopus.Server.Extensibility." + nugetVersion + ".nupkg", new NuGetPushSettings {
+        NuGetPush("artifacts/" + extensionName + "." + nugetVersion + ".nupkg", new NuGetPushSettings {
             Source = "https://www.nuget.org/api/v2/package",
             ApiKey = EnvironmentVariable("NuGetApiKey")
         });
