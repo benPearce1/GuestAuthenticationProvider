@@ -112,8 +112,8 @@ Task("__Publish")
 {
     var isPullRequest = !String.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
     var isMasterBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master" && !isPullRequest;
-    var shouldPushToMyGet = !BuildSystem.IsLocalBuild;
-    var shouldPushToNuGet = !BuildSystem.IsLocalBuild && isMasterBranch;
+    var shouldPushToMyGet = !BuildSystem.IsLocalBuild && !String.IsNullOrEmpty(EnvironmentVariable("MyGetApiKey"));
+    var shouldPushToNuGet = !BuildSystem.IsLocalBuild && isMasterBranch && !String.IsNullOrEmpty(EnvironmentVariable("NuGetApiKey"));
 
     if (shouldPushToMyGet)
     {
