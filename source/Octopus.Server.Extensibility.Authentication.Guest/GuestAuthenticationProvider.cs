@@ -23,13 +23,15 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
 
         public AuthenticationProviderElement GetAuthenticationProviderElement(string siteBaseUri)
         {
-            return new AuthenticationProviderElement
+            var authenticationProviderElement = new AuthenticationProviderElement
             {
                 Name = IdentityProviderName,
                 IsGuestProvider = true,
-                FormsAuthenticateUri = AuthenticateUri,
                 LinkHtml = "<div style=\"padding: 20px 20px 30px; text-align: center; \"><button class=\"btn btn-success\" type=\"button\" ng-click=\"signIn()\" focus-on=\"guest\" ng-disabled=\"isSubmitting.busy\">Sign in as a guest</button></div>"
             };
+            authenticationProviderElement.Links.Add(AuthenticationProviderElement.FormsAuthenticateLinkName, AuthenticateUri);
+
+            return authenticationProviderElement;
         }
     }
 }
