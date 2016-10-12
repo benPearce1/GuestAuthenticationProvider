@@ -1,10 +1,17 @@
-﻿using Octopus.Server.Extensibility.HostServices.Model;
+﻿using Octopus.Server.Extensibility.Extensions.Infrastructure.Configuration;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
 {
-    public class GuestConfiguration : IId
+    public class GuestConfiguration : ExtensionConfigurationDocument
     {
-        public string Id { get; set; }
+        protected GuestConfiguration()
+        {
+        }
+
+        public GuestConfiguration(string name, string extensionAuthor) : base(name, extensionAuthor)
+        {
+            Id = GuestConfigurationStore.SingletonId;
+        }
 
         public bool IsEnabled { get; set; }
     }
