@@ -19,10 +19,12 @@ var configuration = Argument("configuration", "Release");
 var publishDir = "./publish";
 var artifactsDir = "./artifacts";
 var assetDir = "./BuildAssets";
+var localPackagesDir = "../LocalPackages";
 var globalAssemblyFile = "./source/Solution Items/VersionInfo.cs";
 var extensionName = "Octopus.Server.Extensibility.Authentication.Guest";
 var solutionToBuild = "./source/" + extensionName + ".sln";
 var fileToPublish = "./source/" + extensionName + "/bin/Release/" + extensionName + ".dll";
+var cleanups = new List<IDisposable>(); 
 
 var isContinuousIntegrationBuild = !BuildSystem.IsLocalBuild;
 
@@ -30,7 +32,7 @@ var gitVersionInfo = GitVersion(new GitVersionSettings {
     OutputType = GitVersionOutput.Json
 });
 
-var nugetVersion = isContinuousIntegrationBuild ? gitVersionInfo.NuGetVersion : "0.0.0";
+var nugetVersion = gitVersionInfo.NuGetVersion;
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -42,6 +44,10 @@ Setup(context =>
 
 Teardown(context =>
 {
+    Information("Cleaning up");
+    foreach(var item in cleanups)
+        item.Dispose();
+
     Information("Finished running tasks.");
 });
 
@@ -55,7 +61,8 @@ Task("__Default")
     .IsDependentOn("__UpdateAssemblyVersionInformation")
     .IsDependentOn("__Build")
     .IsDependentOn("__Pack")
-	.IsDependentOn("__Publish");
+	.IsDependentOn("__Publish")
+	.IsDependentOn("__CopyToLocalPackages");
 
 Task("__Clean")
     .Does(() =>
@@ -70,10 +77,11 @@ Task("__Restore")
     .Does(() => NuGetRestore(solutionToBuild));
 	
 Task("__UpdateAssemblyVersionInformation")
-    .WithCriteria(isContinuousIntegrationBuild)
     .Does(() =>
 {
-     GitVersion(new GitVersionSettings {
+	cleanups.Add(new AutoRestoreFile(globalAssemblyFile));
+	
+	GitVersion(new GitVersionSettings {
         UpdateAssemblyInfo = true,
         UpdateAssemblyInfoFilePath = globalAssemblyFile
     });
@@ -89,7 +97,6 @@ Task("__Build")
 {
     DotNetBuild(solutionToBuild, settings => settings.SetConfiguration(configuration));
 });
-
 
 Task("__Pack")
     .Does(() => {
@@ -117,20 +124,41 @@ Task("__Publish")
 
     if (shouldPushToMyGet)
     {
-        NuGetPush("artifacts/" + extensionName + "." + nugetVersion + ".nupkg", new NuGetPushSettings {
+        NuGetPush($"artifacts/{extensionName}.{nugetVersion}.nupkg", new NuGetPushSettings {
             Source = "https://octopus.myget.org/F/octopus-dependencies/api/v3/index.json",
             ApiKey = EnvironmentVariable("MyGetApiKey")
         });
     }
     if (shouldPushToNuGet)
     {
-        NuGetPush("artifacts/" + extensionName + "." + nugetVersion + ".nupkg", new NuGetPushSettings {
+        NuGetPush($"artifacts/{extensionName}.{nugetVersion}.nupkg", new NuGetPushSettings {
             Source = "https://www.nuget.org/api/v2/package",
             ApiKey = EnvironmentVariable("NuGetApiKey")
         });
     }
 });
 
+Task("__CopyToLocalPackages")
+    .WithCriteria(BuildSystem.IsLocalBuild)
+    .IsDependentOn("__Pack")
+    .Does(() =>
+{
+    CreateDirectory(localPackagesDir);
+    CopyFileToDirectory(Path.Combine(artifactsDir, $"{extensionName}.{nugetVersion}.nupkg"), localPackagesDir);
+});
+
+private class AutoRestoreFile : IDisposable
+{
+	private byte[] _contents;
+	private string _filename;
+	public AutoRestoreFile(string filename)
+	{
+		_filename = filename;
+		_contents = IO.File.ReadAllBytes(filename);
+	}
+
+	public void Dispose() => IO.File.WriteAllBytes(_filename, _contents);
+}
 
 //////////////////////////////////////////////////////////////////////
 // TASKS

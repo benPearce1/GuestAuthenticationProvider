@@ -1,9 +1,9 @@
 ﻿using Autofac;
+using Octopus.Server.Extensibility.Authentication.Extensions;
 using Octopus.Server.Extensibility.Authentication.Guest.Configuration;
 using Octopus.Server.Extensibility.Authentication.Guest.GuestAuth;
 using Octopus.Server.Extensibility.Authentication.Guest.Web;
 using Octopus.Server.Extensibility.Extensions;
-using Octopus.Server.Extensibility.Extensions.Contracts.Authentication;
 using Octopus.Server.Extensibility.Extensions.Infrastructure.Configuration;
 using Octopus.Server.Extensibility.HostServices.Web;
 
