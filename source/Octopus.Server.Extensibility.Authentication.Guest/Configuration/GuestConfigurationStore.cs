@@ -4,7 +4,6 @@ using Octopus.Configuration;
 using Octopus.Data.Model.User;
 using Octopus.Data.Storage.Configuration;
 using Octopus.Data.Storage.User;
-using Octopus.DataModelling;
 using Octopus.Diagnostics;
 using Octopus.Server.Extensibility.Extensions.Infrastructure.Configuration;
 
