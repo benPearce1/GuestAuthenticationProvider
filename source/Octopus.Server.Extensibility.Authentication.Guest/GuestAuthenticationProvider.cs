@@ -21,7 +21,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
 
         public string AuthenticateUri => GuestApi.ApiUsersAuthenticate;
 
-        public AuthenticationProviderElement GetAuthenticationProviderElement(string siteBaseUri)
+        public AuthenticationProviderElement GetAuthenticationProviderElement(string requestDirectoryPath)
         {
             var authenticationProviderElement = new AuthenticationProviderElement
             {
@@ -29,7 +29,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
                 IsGuestProvider = true,
                 LinkHtml = "<div style=\"padding: 20px 20px 30px; text-align: center; \"><button class=\"btn btn-success\" type=\"button\" ng-click=\"signIn()\" focus-on=\"guest\" ng-disabled=\"isSubmitting.busy\">Sign in as a guest</button></div>"
             };
-            authenticationProviderElement.Links.Add(AuthenticationProviderElement.FormsAuthenticateLinkName, AuthenticateUri);
+            authenticationProviderElement.Links.Add(AuthenticationProviderElement.FormsAuthenticateLinkName, "~" + AuthenticateUri);
 
             return authenticationProviderElement;
         }
