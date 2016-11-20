@@ -33,5 +33,10 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
 
             return authenticationProviderElement;
         }
+
+        public string[] GetAuthenticationUrls()
+        {
+            return new[] { AuthenticateUri };
+        }
     }
 }
