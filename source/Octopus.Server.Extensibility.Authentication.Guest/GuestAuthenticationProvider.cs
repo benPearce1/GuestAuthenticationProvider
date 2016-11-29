@@ -23,6 +23,11 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
 
         public AuthenticationProviderElement GetAuthenticationProviderElement(string requestDirectoryPath)
         {
+            return GetAuthenticationProviderElement();
+        }
+
+        public AuthenticationProviderElement GetAuthenticationProviderElement()
+        {
             var authenticationProviderElement = new AuthenticationProviderElement
             {
                 Name = IdentityProviderName,
