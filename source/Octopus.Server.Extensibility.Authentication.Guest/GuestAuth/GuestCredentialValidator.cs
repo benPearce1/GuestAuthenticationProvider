@@ -3,6 +3,7 @@ using Octopus.Data.Model.User;
 using Octopus.Data.Storage.User;
 using Octopus.Diagnostics;
 using Octopus.Server.Extensibility.Authentication.Guest.Configuration;
+using Octopus.Server.Extensibility.Authentication.Storage.User;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
 {
@@ -22,10 +23,12 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
             this.configurationStore = configurationStore;
         }
 
-        public IUser ValidateCredentials(string username, string password)
+        public int Priority => 1;
+
+        public AuthenticationUserCreateOrUpdateResult ValidateCredentials(string username, string password)
         {
             if ((!configurationStore.GetIsEnabled() || !string.Equals(username, User.GuestLogin, StringComparison.InvariantCultureIgnoreCase)))
-                return null;
+                return new AuthenticationUserCreateOrUpdateResult();
 
             var user = userStore.GetByUsername(username);
 
@@ -39,7 +42,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
             }
             else
             {
-                return user;
+                return new AuthenticationUserCreateOrUpdateResult(user);
             }
 
             return null;

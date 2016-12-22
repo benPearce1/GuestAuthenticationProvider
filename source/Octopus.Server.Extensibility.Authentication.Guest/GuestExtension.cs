@@ -2,10 +2,8 @@
 using Octopus.Server.Extensibility.Authentication.Extensions;
 using Octopus.Server.Extensibility.Authentication.Guest.Configuration;
 using Octopus.Server.Extensibility.Authentication.Guest.GuestAuth;
-using Octopus.Server.Extensibility.Authentication.Guest.Web;
 using Octopus.Server.Extensibility.Extensions;
 using Octopus.Server.Extensibility.Extensions.Infrastructure.Configuration;
-using Octopus.Server.Extensibility.HostServices.Web;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest
 {
@@ -14,8 +12,6 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
     {
         public void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<GuestHomeLinksContributor>().As<IHomeLinksContributor>().InstancePerDependency();
-
             builder.RegisterType<GuestConfigurationMapping>().As<IConfigurationDocumentMapper>().InstancePerDependency();
 
             builder.RegisterType<GuestConfigurationStore>()
@@ -24,9 +20,10 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
                 .InstancePerDependency();
             builder.RegisterType<GuestConfigureCommands>().As<IContributeToConfigureCommand>().InstancePerDependency();
 
-            builder.RegisterType<GuestCredentialValidator>().As<IGuestCredentialValidator>().InstancePerDependency();
-
-            builder.RegisterType<UserLoginAction>().AsSelf().InstancePerDependency();
+            builder.RegisterType<GuestCredentialValidator>()
+                .As<IGuestCredentialValidator>()
+                .As<IDoesBasicAuthentication>()
+                .InstancePerDependency();
 
             builder.RegisterType<GuestAuthenticationProvider>().As<IAuthenticationProvider>().InstancePerDependency();
         }

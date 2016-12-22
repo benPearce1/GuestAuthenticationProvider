@@ -1,9 +1,8 @@
-﻿using Octopus.Data.Model.User;
+﻿using Octopus.Server.Extensibility.Authentication.Extensions;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
 {
-    public interface IGuestCredentialValidator
+    public interface IGuestCredentialValidator : IDoesBasicAuthentication
     {
-        IUser ValidateCredentials(string username, string password);
     }
 }
