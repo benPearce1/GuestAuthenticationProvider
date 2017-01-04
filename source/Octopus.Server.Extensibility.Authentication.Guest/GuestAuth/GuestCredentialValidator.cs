@@ -3,6 +3,7 @@ using Octopus.Data.Model.User;
 using Octopus.Data.Storage.User;
 using Octopus.Diagnostics;
 using Octopus.Server.Extensibility.Authentication.Guest.Configuration;
+using Octopus.Server.Extensibility.Authentication.Storage.User;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
 {
@@ -22,27 +23,31 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
             this.configurationStore = configurationStore;
         }
 
-        public IUser ValidateCredentials(string username, string password)
+        public int Priority => 1;
+
+        public AuthenticationUserCreateOrUpdateResult ValidateCredentials(string username, string password)
         {
             if ((!configurationStore.GetIsEnabled() || !string.Equals(username, User.GuestLogin, StringComparison.InvariantCultureIgnoreCase)))
-                return null;
+                return new AuthenticationUserCreateOrUpdateResult();
 
             var user = userStore.GetByUsername(username);
+            var messageText = "Error retrieving Guest user details";
 
-            if (user == null)
+            if (user != null && user.IsActive)
             {
-                log.Warn("Guest login is enabled, but the guest user acccount could not be found so the login request was rejected. Please restart the Octopus server.");
+                return new AuthenticationUserCreateOrUpdateResult(user);
+            }
+            else if (user == null)
+            {
+                messageText = "Guest login is enabled, but the guest user acccount could not be found so the login request was rejected. Please restart the Octopus server.";
             }
             else if (user.IsActive == false)
             {
-                log.Warn("Guest login is enabled, but the guest acccount is disabled so the login request was rejected. Please re-enable the guest account if you want guest logins to work.");
-            }
-            else
-            {
-                return user;
+                messageText = "Guest login is enabled, but the guest acccount is disabled so the login request was rejected. Please re-enable the guest account if you want guest logins to work.";
             }
 
-            return null;
+            log.Warn(messageText);
+            return new AuthenticationUserCreateOrUpdateResult(messageText);
         }
     }
 }
