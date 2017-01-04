@@ -31,21 +31,23 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
                 return new AuthenticationUserCreateOrUpdateResult();
 
             var user = userStore.GetByUsername(username);
+            var messageText = "Error retrieving Guest user details";
 
-            if (user == null)
-            {
-                log.Warn("Guest login is enabled, but the guest user acccount could not be found so the login request was rejected. Please restart the Octopus server.");
-            }
-            else if (user.IsActive == false)
-            {
-                log.Warn("Guest login is enabled, but the guest acccount is disabled so the login request was rejected. Please re-enable the guest account if you want guest logins to work.");
-            }
-            else
+            if (user != null && user.IsActive)
             {
                 return new AuthenticationUserCreateOrUpdateResult(user);
             }
+            else if (user == null)
+            {
+                messageText = "Guest login is enabled, but the guest user acccount could not be found so the login request was rejected. Please restart the Octopus server.";
+            }
+            else if (user.IsActive == false)
+            {
+                messageText = "Guest login is enabled, but the guest acccount is disabled so the login request was rejected. Please re-enable the guest account if you want guest logins to work.";
+            }
 
-            return null;
+            log.Warn(messageText);
+            return new AuthenticationUserCreateOrUpdateResult(messageText);
         }
     }
 }
