@@ -25,7 +25,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
                 var isEnabled = bool.Parse(v);
                 configurationStore.Value.SetIsEnabled(isEnabled);
                 log.Info($"Guest login enabled: {isEnabled}");
-            });
+            }); 
         }
     }
 }
