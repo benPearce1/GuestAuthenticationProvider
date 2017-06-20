@@ -1,4 +1,4 @@
-﻿using Octopus.Server.Extensibility.Authentication.Extensions;
+﻿using Octopus.Node.Extensibility.Authentication.Extensions;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
 {

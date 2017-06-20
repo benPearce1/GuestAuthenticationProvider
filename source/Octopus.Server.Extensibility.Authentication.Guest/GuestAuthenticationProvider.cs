@@ -1,11 +1,12 @@
-﻿using Octopus.Server.Extensibility.Authentication.Extensions;
+﻿using Octopus.Node.Extensibility.Authentication.Extensions;
+using Octopus.Node.Extensibility.Authentication.Resources;
 using Octopus.Server.Extensibility.Authentication.Guest.Configuration;
-using Octopus.Server.Extensibility.Authentication.Resources;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest
 {
     public class GuestAuthenticationProvider : IAuthenticationProvider
     {
+        public const string ProviderName = "Octopus - Guest";
         readonly IGuestConfigurationStore configurationStore;
 
         public GuestAuthenticationProvider(IGuestConfigurationStore configurationStore)
@@ -13,7 +14,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
             this.configurationStore = configurationStore;
         }
 
-        public string IdentityProviderName => "Octopus - Guest";
+        public string IdentityProviderName => ProviderName;
 
         public bool IsEnabled => configurationStore.GetIsEnabled();
 
@@ -25,7 +26,6 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
             {
                 Name = IdentityProviderName,
                 IsGuestProvider = true,
-                LinkHtml = "<div style=\"padding: 20px 20px 30px; text-align: center; \"><button class=\"btn btn-success\" type=\"button\" ng-click=\"signIn()\" focus-on=\"guest\" ng-disabled=\"isSubmitting.busy\">Sign in as a guest</button></div>"
             };
 
             return authenticationProviderElement;

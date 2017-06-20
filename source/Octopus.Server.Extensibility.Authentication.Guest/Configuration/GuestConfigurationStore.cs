@@ -5,7 +5,8 @@ using Octopus.Data.Model.User;
 using Octopus.Data.Storage.Configuration;
 using Octopus.Data.Storage.User;
 using Octopus.Diagnostics;
-using Octopus.Server.Extensibility.Extensions.Infrastructure.Configuration;
+using Octopus.Node.Extensibility.Authentication.HostServices;
+using Octopus.Node.Extensibility.Extensions.Infrastructure.Configuration;
 
 namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
 {
@@ -16,13 +17,13 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
         readonly ILog log;
         readonly IKeyValueStore settings;
         readonly IConfigurationStore configurationStore;
-        readonly IUserStore userStore;
+        readonly IUpdateableUserStore userStore;
 
         public GuestConfigurationStore(
             ILog log,
             IKeyValueStore settings,
             IConfigurationStore configurationStore,
-            IUserStore userStore)
+            IUpdateableUserStore userStore)
         {
             this.log = log;
             this.settings = settings;
@@ -89,8 +90,8 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
                     "Guest",
                     null,
                     null,
-                    new ApiKeyDescriptor("API-GUEST", "API-GUEST"),
-                    generateRandomPasswordOnCreate: true);
+                    new ApiKeyDescriptor("API-GUEST", "API-GUEST"));
+
                 if (!userResult.Succeeded)
                 {
                     log.Error("Error creating guest account: " + userResult.FailureReason);
