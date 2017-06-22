@@ -35,8 +35,6 @@ Setup(context =>
 {
     if(BuildSystem.IsRunningOnTeamCity)
         BuildSystem.TeamCity.SetBuildNumber(gitVersionInfo.NuGetVersion);
-    if(BuildSystem.IsRunningOnAppVeyor)
-        AppVeyor.UpdateBuildVersion(gitVersionInfo.NuGetVersion);
 
     Information("Building Octopus.Server.Extensibility.Authentication.Guest v{0}", nugetVersion);
 });
@@ -128,19 +126,6 @@ Task("__CopyToLocalPackages")
     CreateDirectory(localPackagesDir);
     CopyFileToDirectory(Path.Combine(artifactsDir, $"Octopus.Server.Extensibility.Authentication.Guest.{nugetVersion}.nupkg"), localPackagesDir);
 });
-
-private class AutoRestoreFile : IDisposable
-{
-	private byte[] _contents;
-	private string _filename;
-	public AutoRestoreFile(string filename)
-	{
-		_filename = filename;
-		_contents = IO.File.ReadAllBytes(filename);
-	}
-
-	public void Dispose() => IO.File.WriteAllBytes(_filename, _contents);
-}
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
