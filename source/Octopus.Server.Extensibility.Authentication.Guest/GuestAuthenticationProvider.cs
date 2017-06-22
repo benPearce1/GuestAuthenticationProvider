@@ -25,7 +25,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest
             var authenticationProviderElement = new AuthenticationProviderElement
             {
                 Name = IdentityProviderName,
-                IsGuestProvider = true
+                IdentityType = IdentityType.Guest
             };
 
             return authenticationProviderElement;
