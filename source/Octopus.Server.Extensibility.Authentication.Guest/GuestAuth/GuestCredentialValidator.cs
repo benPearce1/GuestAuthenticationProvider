@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Octopus.Data.Model.User;
 using Octopus.Data.Storage.User;
 using Octopus.Diagnostics;
@@ -25,7 +26,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.GuestAuth
 
         public int Priority => 1;
 
-        public AuthenticationUserCreateOrUpdateResult ValidateCredentials(string username, string password)
+        public AuthenticationUserCreateOrUpdateResult ValidateCredentials(string username, string password, CancellationToken cancellationToken)
         {
             if ((!configurationStore.GetIsEnabled() || !string.Equals(username, User.GuestLogin, StringComparison.InvariantCultureIgnoreCase)))
                 return new AuthenticationUserCreateOrUpdateResult();
