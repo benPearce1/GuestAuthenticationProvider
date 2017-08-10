@@ -90,8 +90,8 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
                     "Guest",
                     null,
                     null,
-                    null,
                     false,
+                    null,
                     CancellationToken.None);
                 if (!userResult.Succeeded)
                 {
