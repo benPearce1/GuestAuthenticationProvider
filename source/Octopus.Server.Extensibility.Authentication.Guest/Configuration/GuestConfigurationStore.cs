@@ -91,7 +91,8 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
                     "Guest",
                     null,
                     CancellationToken.None,
-                    apiKeyDescriptor: new ApiKeyDescriptor("API-GUEST", "API-GUEST"));
+                    apiKeyDescriptor: new ApiKeyDescriptor("API-GUEST", "API-GUEST"),
+                    password: Guid.NewGuid().ToString());
                 if (!userResult.Succeeded)
                 {
                     log.Error("Error creating guest account: " + userResult.FailureReason);
