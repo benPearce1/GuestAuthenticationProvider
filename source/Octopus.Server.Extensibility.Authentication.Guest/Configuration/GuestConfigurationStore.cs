@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Octopus.Configuration;
 using Octopus.Data.Model.User;
 using Octopus.Data.Storage.Configuration;
@@ -89,9 +90,9 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
                     User.GuestLogin, 
                     "Guest",
                     null,
-                    null,
-                    new ApiKeyDescriptor("API-GUEST", "API-GUEST"));
-
+                    CancellationToken.None,
+                    apiKeyDescriptor: new ApiKeyDescriptor("API-GUEST", "API-GUEST"),
+                    password: Guid.NewGuid().ToString());
                 if (!userResult.Succeeded)
                 {
                     log.Error("Error creating guest account: " + userResult.FailureReason);

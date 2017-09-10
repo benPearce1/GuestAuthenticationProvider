@@ -13,20 +13,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- These packages are copied to the output directory during the build process -->
     <PackageReference Include="Autofac" Version="4.6.0" />
     <PackageReference Include="Nancy" Version="1.2.0" />
     <PackageReference Include="Nancy.Serialization.JsonNet" Version="1.2.0" />
-    <PackageReference Include="Nevermore.Contracts" Version="4.0.0-enh-odcm0046" />
+    <PackageReference Include="Nevermore.Contracts" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="NuGet.Versioning" Version="3.4.3" />
     <PackageReference Include="Octopus.Configuration" Version="1.0.10" />
-    <PackageReference Include="Octopus.Data" Version="2.0.0-enh-odcm0028" />
+    <PackageReference Include="Octopus.Data" Version="2.1.0-alpha0040" />
     <PackageReference Include="Octopus.Diagnostics" Version="1.0.11" />
-    <PackageReference Include="Octopus.Node.Extensibility" Version="3.0.0-enh-odcm0019" />
-    <PackageReference Include="Octopus.Node.Extensibility.Authentication" Version="5.0.0-enh-odcm0039" />
-    <PackageReference Include="Octopus.Server.Extensibility" Version="3.0.0-enh-odcm0019" />
-    <PackageReference Include="Octopus.Server.Extensibility.Authentication" Version="5.0.0-enh-odcm0039" />
+    <PackageReference Include="Octopus.Node.Extensibility" Version="3.0.0-enh-odcm0026" />
+    <PackageReference Include="Octopus.Node.Extensibility.Authentication" Version="4.1.1-enh-odcm0051" />
+    <PackageReference Include="Octopus.Server.Extensibility" Version="3.0.0-enh-odcm0026" />
+    <PackageReference Include="Octopus.Server.Extensibility.Authentication" Version="4.1.1-enh-odcm0051" />
     <PackageReference Include="Octopus.Time" Version="1.0.8" />
   </ItemGroup>
 
@@ -35,14 +39,11 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
 
   <ItemGroup>
