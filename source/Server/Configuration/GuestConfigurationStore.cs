@@ -72,7 +72,15 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
             return doc;
         }
 
+        public string Id => SingletonId;
+
         public string ConfigurationSetName => "Guest Login";
+
+        public virtual string Description => "Guest login authentication settings";
+
+        public Type MetadataResourceType => typeof(GuestConfiguration);
+
+        
         public IEnumerable<ConfigurationValue> GetConfigurationValues()
         {
             yield return new ConfigurationValue("Octopus.WebPortal.GuestLoginEnabled", GetIsEnabled().ToString(), GetIsEnabled(), "Is Enabled");
