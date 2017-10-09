@@ -32,6 +32,16 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
             this.userStore = userStore;
         }
 
+        public object GetConfiguration()
+        {
+            return configurationStore.Get<GuestConfiguration>(SingletonId);
+        }
+
+        public void SetConfiguration(object config)
+        {
+            configurationStore.Update(config as GuestConfiguration);
+        }
+
         public bool GetIsEnabled()
         {
             var doc = configurationStore.Get<GuestConfiguration>(SingletonId);
