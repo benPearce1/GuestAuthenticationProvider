@@ -12,7 +12,5 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
         {
             Id = GuestConfigurationStore.SingletonId;
         }
-
-        public bool IsEnabled { get; set; }
     }
 }
