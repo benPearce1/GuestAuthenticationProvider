@@ -8,7 +8,7 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
         {
         }
 
-        public GuestConfiguration(string name, string extensionAuthor) : base(name, extensionAuthor)
+        public GuestConfiguration(string name, string extensionAuthor) : base(name, extensionAuthor, "1.0")
         {
             Id = GuestConfigurationStore.SingletonId;
         }

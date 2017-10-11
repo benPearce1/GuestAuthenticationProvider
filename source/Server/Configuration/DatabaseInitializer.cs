@@ -27,7 +27,15 @@ namespace Octopus.Server.Extensibility.Authentication.Guest.Configuration
         {
             var doc = configurationStore.Get<GuestConfiguration>(GuestConfigurationStore.SingletonId);
             if (doc != null)
+            {
+                // TODO: to cover a dev team edge case during 4.0 Alpha. Can be removed before final release
+                if (doc.ConfigurationSchemaVersion != "1.0")
+                {
+                    doc.ConfigurationSchemaVersion = "1.0";
+                    configurationStore.Update(doc);
+                }
                 return;
+            }
 
             log.Info("Moving Octopus.WebPortal.GuestLoginEnabled from config file to DB");
 
